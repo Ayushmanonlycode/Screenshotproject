@@ -1,0 +1,12 @@
+{
+  "name": "infographic-screenshot-project",
+  "version": "1.0.0",
+  "description": "Infographic screenshot project with frontend and backend",
+  "scripts": {
+    "build": "chmod +x build.sh && ./build.sh",
+    "start": "cd backend && node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
