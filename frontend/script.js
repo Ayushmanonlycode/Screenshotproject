@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
             loading.classList.remove('hidden');
             downloadLink.classList.add('hidden');
             
+            console.log('Sending request to:', `${BACKEND_URL}/api/screenshot`);
+            
             // Call the backend API to take a screenshot
             const response = await fetch(`${BACKEND_URL}/api/screenshot`, {
                 method: 'POST',
@@ -28,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             if (!response.ok) {
-                throw new Error('Failed to take screenshot');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to take screenshot');
             }
             
             // Get the blob from response
@@ -52,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide loading and show error state
             loading.classList.add('hidden');
             screenshotBtn.style.display = 'inline-block';
-            screenshotBtn.textContent = 'Error! Try Again';
+            screenshotBtn.textContent = `Error: ${error.message}`;
             screenshotBtn.style.backgroundColor = '#dc3545';
             
             // Reset button after 3 seconds
