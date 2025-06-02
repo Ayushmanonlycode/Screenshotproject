@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the backend URL from environment or use default
     const BACKEND_URL = window.location.hostname === 'localhost' 
         ? 'http://localhost:3000' 
-        : 'https://your-backend-url.com'; // Replace with your actual backend URL
+        : 'https://screenshotprojectbackend.onrender.com/'; // Replace with your actual backend URL
     
     screenshotBtn.addEventListener('click', async function() {
         try {
