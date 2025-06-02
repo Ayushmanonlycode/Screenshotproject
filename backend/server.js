@@ -49,6 +49,7 @@ app.post('/api/screenshot', async (req, res) => {
                 '--disable-gpu',
                 '--single-process'
             ],
+            executablePath: '/usr/bin/google-chrome',
             ignoreHTTPSErrors: true
         });
         
