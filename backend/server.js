@@ -30,6 +30,7 @@ app.post('/api/screenshot', async (req, res) => {
     
     try {
         console.log('Starting screenshot process...');
+        console.log('Request body:', req.body);
         
         // Launch browser with optimized settings for Render
         browser = await puppeteer.launch({
@@ -42,10 +43,12 @@ app.post('/api/screenshot', async (req, res) => {
                 '--no-first-run',
                 '--no-zygote',
                 '--disable-gpu',
-                '--single-process' // Added for Render
+                '--single-process'
             ],
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
         });
+        
+        console.log('Browser launched successfully');
         
         const page = await browser.newPage();
         
@@ -57,8 +60,10 @@ app.post('/api/screenshot', async (req, res) => {
         });
         
         // Navigate to the infographic page
-        const baseUrl = req.headers.origin || `http://localhost:${PORT}`;
-        await page.goto(baseUrl, {
+        const targetUrl = req.body.url || `http://localhost:${PORT}`;
+        console.log('Navigating to URL:', targetUrl);
+        
+        await page.goto(targetUrl, {
             waitUntil: 'networkidle0',
             timeout: 30000
         });
@@ -97,22 +102,32 @@ app.post('/api/screenshot', async (req, res) => {
         res.send(screenshot);
         
     } catch (error) {
-        console.error('Error taking screenshot:', error);
+        console.error('Detailed error:', error);
         res.status(500).json({ 
             error: 'Failed to take screenshot', 
-            message: error.message 
+            message: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     } finally {
         // Always close the browser
         if (browser) {
-            await browser.close();
+            try {
+                await browser.close();
+                console.log('Browser closed successfully');
+            } catch (error) {
+                console.error('Error closing browser:', error);
+            }
         }
     }
 });
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV
+    });
 });
 
 // Serve the main page
@@ -124,6 +139,7 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`📸 Screenshot API available at http://localhost:${PORT}/api/screenshot`);
+    console.log('Environment:', process.env.NODE_ENV);
 });
 
 // Graceful shutdown
