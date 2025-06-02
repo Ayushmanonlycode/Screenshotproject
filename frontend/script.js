@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`${BACKEND_URL}/api/screenshot`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Origin': window.location.origin
                 },
                 body: JSON.stringify({
                     url: window.location.href
