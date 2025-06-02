@@ -2,6 +2,7 @@ import express from 'express';
 import puppeteer from 'puppeteer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 // Get the directory name for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
@@ -21,7 +23,7 @@ app.post('/api/screenshot', async (req, res) => {
     try {
         console.log('Starting screenshot process...');
         
-        // Launch browser with optimized settings
+        // Launch browser with optimized settings for Render
         browser = await puppeteer.launch({
             headless: 'new',
             args: [
@@ -31,8 +33,10 @@ app.post('/api/screenshot', async (req, res) => {
                 '--disable-accelerated-2d-canvas',
                 '--no-first-run',
                 '--no-zygote',
-                '--disable-gpu'
-            ]
+                '--disable-gpu',
+                '--single-process' // Added for Render
+            ],
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
         });
         
         const page = await browser.newPage();

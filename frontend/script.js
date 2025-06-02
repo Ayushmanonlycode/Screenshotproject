@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadLink = document.getElementById('download-link');
     const loading = document.getElementById('loading');
     
+    // Get the backend URL from environment or use default
+    const BACKEND_URL = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : 'https://your-backend-url.com'; // Replace with your actual backend URL
+    
     screenshotBtn.addEventListener('click', async function() {
         try {
             // Show loading state
@@ -11,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             downloadLink.classList.add('hidden');
             
             // Call the backend API to take a screenshot
-            const response = await fetch('/api/screenshot', {
+            const response = await fetch(`${BACKEND_URL}/api/screenshot`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
