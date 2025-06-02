@@ -25,5 +25,6 @@
     "nodejs",
     "express",
     "puppeteer"
-  ]
+  ],
+  "puppeteer_skip_chromium_download": false
 }
