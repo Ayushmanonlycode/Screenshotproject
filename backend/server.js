@@ -13,8 +13,12 @@ const PORT = process.env.PORT || 3000;
 
 // CORS configuration
 const corsOptions = {
-    origin: ['https://screenshotprojectbackend.onrender.com', 'http://localhost:3000'],
-    methods: ['GET', 'POST'],
+    origin: [
+        'https://screenshotprojectbackend.onrender.com',
+        'http://localhost:3000',
+        'https://screenshotpin.netlify.app'
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Origin'],
     credentials: true
 };
